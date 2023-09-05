@@ -1,24 +1,57 @@
-"use client"
-import React, { useState } from 'react'
-import Header from '@/Components/Header'
+"use client" 
+import React, { useState,useEffect   } from 'react'
+import axios from 'axios'
 
 const page = () => {
 
-  const [marks, setMarks] = useState(80)
-  const [user, setUser] = useState("Surendra")
+  const [Images, setImages] = useState([])
+
+  useEffect(() => {
+    
+    GetImages()
+  }, [])
+  
+
+  const GetImages= async ()=>{
+
+
+ try {
+  
+  const response = await axios.get("https://picsum.photos/v2/list")
+
+  const data = response.data
+  setImages(data)
+  console.log(Images)
+ } catch (error) {
+  
+  console.error("error fetching images")
+ }
+
+  }
 
 
   return (
     <>
-    <Header user={user}/>
-      <div>
-      <h1 className='font-bold  text-6xl text-orange-500' >my name is {user}</h1>
-      <h1 className='font-bold text-3xl text-red-400 ' >my total marks is {marks}</h1>
-        <button 
-        onClick={()=>{
-          setMarks(33)
-        }}
-        className='bg-gray-400 px-5 py-2 rounded mt-8 text-white font-bold ' >Update</button>
+      <div > 
+        <button
+        onClick={GetImages}
+         className='py-3 px-5 bg-green-600 text-white font-bold '>Get Images</button>
+
+        <div className='p-10'>
+          {
+            Images.map((elem,i)=>{
+              return <img 
+              key={i}
+              src={elem.download_url}
+
+            width={300}
+            height={30}
+            className='m-10 rounded inline-block '
+              />
+            })
+          }
+
+        </div>
       </div>
     </>
   )
